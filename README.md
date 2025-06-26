@@ -9,6 +9,19 @@ This blog serves as a personal space to document my journey in software engineer
 -   Programming Languages (e.g., Python, JavaScript, Go)
 -   Productivity and Tools for Developers
 
+## Command
+
+All commands are run from the root of the project in your terminal.
+
+| Command | Action |
+| :--- | :--- |
+| `pnpm install && pnpm add sharp` | Installs dependencies. |
+| `pnpm dev` | Starts the local development server at `localhost:4321`. |
+| `pnpm build` | Builds the production site to `./dist/`. |
+| `pnpm preview` | Previews your build locally before deploying. |
+| `pnpm new-post <filename>` | Creates a new blog post. |
+| `pnpm astro ...` | Runs Astro CLI commands like `astro add`, `astro check`. |
+| `pnpm astro --help` | Get help using the Astro CLI. |
 
 ## 📄 License
 
