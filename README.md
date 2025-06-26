@@ -1,4 +1,4 @@
-# 🍥 My Technical Blog
+# My Technical Blog
 
 Welcome to my technical blog, built with [Fuwari](https://github.com/saicaca/fuwari). This repository contains all the content for the blog.
 
@@ -13,3 +13,7 @@ This blog serves as a personal space to document my journey in software engineer
 ## 📄 License
 
 This project is licensed under the MIT License.
+
+## ETC
+- [Blog](https://sigee-min.github.io)
+- [Reference](https://github.com/saicaca/fuwari/blob/main/docs/README.ko.md)
