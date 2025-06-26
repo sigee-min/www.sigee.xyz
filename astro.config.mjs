@@ -153,6 +153,11 @@ export default defineConfig({
 			],
 		],
 	},
+	server: {
+    // Add 'aolda.net' to the allowedHosts array.
+    // It's also good practice to include 'localhost' and '127.0.0.1' for local development.
+    allowedHosts: ['aolda.net', 'localhost', '127.0.0.1'],
+    },
 	vite: {
 		build: {
 			rollupOptions: {
