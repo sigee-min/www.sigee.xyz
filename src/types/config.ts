@@ -13,6 +13,7 @@ export type SiteConfig = {
 	banner: {
 		enable: boolean;
 		src: string;
+		darkSrc?: string; // Add dark mode banner source
 		position?: "top" | "center" | "bottom";
 		credit: {
 			enable: boolean;

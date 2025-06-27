@@ -109,6 +109,14 @@ const bannerOffset =
 			/>
 		))}
 
+		<!-- Preload banner images for faster loading -->
+		{siteConfig.banner.enable && siteConfig.banner.src && (
+			<link rel="preload" as="image" href={url(siteConfig.banner.src)} />
+		)}
+		{siteConfig.banner.enable && siteConfig.banner.darkSrc && (
+			<link rel="preload" as="image" href={url(siteConfig.banner.darkSrc)} />
+		)}
+
 		<!-- Set the theme before the page is rendered to avoid a flash -->
 		<script is:inline define:vars={{DEFAULT_THEME, LIGHT_MODE, DARK_MODE, AUTO_MODE, BANNER_HEIGHT_EXTEND, PAGE_WIDTH, configHue}}>
 			// Load the theme from local storage
@@ -163,6 +171,10 @@ const bannerOffset =
 	bannerOffset,
 	'banner-height-home': `${BANNER_HEIGHT_HOME}vh`,
 	'banner-height': `${BANNER_HEIGHT}vh`,
+	// Pass banner image URLs and position to CSS
+	lightBannerSrc: siteConfig.banner.enable && siteConfig.banner.src ? `url(${url(siteConfig.banner.src)})` : 'none',
+	darkBannerSrc: siteConfig.banner.enable && siteConfig.banner.darkSrc ? `url(${url(siteConfig.banner.darkSrc)})` : 'none',
+	bannerPosition: siteConfig.banner.position || 'center',
 }}>
 @tailwind components;
 @layer components {
@@ -173,11 +185,21 @@ const bannerOffset =
 		@apply h-[var(--banner-height-home)]
 	}
 
-	.enable-banner.is-home #banner {
-		@apply h-[var(--banner-height-home)] translate-y-0
+	/* Apply banner background image and position */
+	.enable-banner.is-home #banner { /* Home page specific banner styling */
+		@apply h-[var(--banner-height-home)] translate-y-0;
+		background-image: var(--lightBannerSrc);
+		background-size: cover;
+		background-position: var(--bannerPosition);
 	}
-	.enable-banner #banner {
-		@apply h-[var(--banner-height-home)] translate-y-[var(--bannerOffset)]
+	.enable-banner #banner { /* General banner styling */
+		@apply h-[var(--banner-height-home)] translate-y-[var(--bannerOffset)];
+		background-image: var(--lightBannerSrc);
+		background-size: cover;
+		background-position: var(--bannerPosition);
+	}
+	html.dark .enable-banner #banner { /* Dark mode banner image override */
+		background-image: var(--darkBannerSrc);
 	}
 	.enable-banner.is-home #main-grid {
 		@apply translate-y-[var(--banner-height-extend)];
@@ -190,6 +212,9 @@ const bannerOffset =
 	}
 	.navbar-hidden {
 		@apply opacity-0 -translate-y-16
+	}
+	.no-transition {
+		transition: none !important;
 	}
 }
 </style>
@@ -371,8 +396,32 @@ function init() {
 	showBanner();
 }
 
+function initBannerThemeAnimation() {
+	if (!siteConfig.banner.enable) return;
+
+	const htmlEl = document.documentElement;
+
+	const observer = new MutationObserver(() => {
+		const banner = document.getElementById('banner');
+		if (!banner || banner.classList.contains('opacity-0')) {
+			return;
+		}
+
+		banner.classList.add('no-transition');
+		banner.classList.add('opacity-0', 'scale-105');
+
+		void banner.offsetWidth;
+
+		banner.classList.remove('no-transition');
+		banner.classList.remove('opacity-0', 'scale-105');
+	});
+
+	observer.observe(htmlEl, { attributes: true, attributeFilter: ['class'] });
+}
+
 /* Load settings when entering the site */
 init();
+initBannerThemeAnimation();
 
 const setup = () => {
 	// TODO: temp solution to change the height of the banner
