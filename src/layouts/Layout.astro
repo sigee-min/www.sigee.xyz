@@ -38,13 +38,6 @@ const isHomePage = pathsEqual(Astro.url.pathname, url("/"));
 // defines global css variables
 // why doing this in Layout instead of GlobalStyles: https://github.com/withastro/astro/issues/6728#issuecomment-1502203757
 const configHue = siteConfig.themeColor.hue;
-if (!banner || typeof banner !== "string" || banner.trim() === "") {
-	banner = siteConfig.banner.src;
-}
-
-// TODO don't use post cover as banner for now
-banner = siteConfig.banner.src;
-
 const enableBanner = siteConfig.banner.enable;
 
 let pageTitle: string;
@@ -109,14 +102,6 @@ const bannerOffset =
 			/>
 		))}
 
-		<!-- Preload banner images for faster loading -->
-		{siteConfig.banner.enable && siteConfig.banner.src && (
-			<link rel="preload" as="image" href={url(siteConfig.banner.src)} />
-		)}
-		{siteConfig.banner.enable && siteConfig.banner.darkSrc && (
-			<link rel="preload" as="image" href={url(siteConfig.banner.darkSrc)} />
-		)}
-
 		<!-- Set the theme before the page is rendered to avoid a flash -->
 		<script is:inline define:vars={{DEFAULT_THEME, LIGHT_MODE, DARK_MODE, AUTO_MODE, BANNER_HEIGHT_EXTEND, PAGE_WIDTH, configHue}}>
 			// Load the theme from local storage
@@ -171,9 +156,6 @@ const bannerOffset =
 	bannerOffset,
 	'banner-height-home': `${BANNER_HEIGHT_HOME}vh`,
 	'banner-height': `${BANNER_HEIGHT}vh`,
-	// Pass banner image URLs and position to CSS
-	lightBannerSrc: siteConfig.banner.enable && siteConfig.banner.src ? `url(${url(siteConfig.banner.src)})` : 'none',
-	darkBannerSrc: siteConfig.banner.enable && siteConfig.banner.darkSrc ? `url(${url(siteConfig.banner.darkSrc)})` : 'none',
 	bannerPosition: siteConfig.banner.position || 'center',
 }}>
 @tailwind components;
@@ -185,21 +167,34 @@ const bannerOffset =
 		@apply h-[var(--banner-height-home)]
 	}
 
-	/* Apply banner background image and position */
-	.enable-banner.is-home #banner { /* Home page specific banner styling */
-		@apply h-[var(--banner-height-home)] translate-y-0;
-		background-image: var(--lightBannerSrc);
-		background-size: cover;
-		background-position: var(--bannerPosition);
+	/* Base styles for both banners */
+	.enable-banner #banner-light,
+	.enable-banner #banner-dark {
+		@apply h-full transition duration-700; /* Apply transition to both */
+		position: absolute; /* Ensure they stack */
+		inset: 0; /* Cover the parent */
+		z-index: 0; /* Default z-index */
+		opacity: 0; /* Default hidden state */
+		transform: scale(1.05); /* Default starting scale for animation */
 	}
-	.enable-banner #banner { /* General banner styling */
-		@apply h-[var(--banner-height-home)] translate-y-[var(--bannerOffset)];
-		background-image: var(--lightBannerSrc);
-		background-size: cover;
-		background-position: var(--bannerPosition);
+
+	/* Default: show light banner */
+	.enable-banner #banner-light {
+		opacity: 1;
+		z-index: 1;
+		transform: scale(1); /* Initial visible state */
 	}
-	html.dark .enable-banner #banner { /* Dark mode banner image override */
-		background-image: var(--darkBannerSrc);
+
+	/* Dark mode: show dark banner, hide light banner */
+	html.dark .enable-banner #banner-light {
+		opacity: 0;
+		z-index: 0;
+		transform: scale(1.05); /* When hidden, reset scale to start state */
+	}
+	html.dark .enable-banner #banner-dark {
+		opacity: 1;
+		z-index: 1;
+		transform: scale(1); /* When visible, animate to normal scale */
 	}
 	.enable-banner.is-home #main-grid {
 		@apply translate-y-[var(--banner-height-extend)];
@@ -379,13 +374,13 @@ function initCustomScrollbar() {
 function showBanner() {
 	if (!siteConfig.banner.enable) return;
 
-	const banner = document.getElementById('banner');
-	if (!banner) {
-		console.error('Banner element not found');
+	const isDarkMode = document.documentElement.classList.contains('dark');
+	const activeBanner = isDarkMode ? document.getElementById('banner-dark') : document.getElementById('banner-light');
+
+	if (!activeBanner) {
+		console.error('Active banner element not found for initial display');
 		return;
 	}
-
-	banner.classList.remove('opacity-0', 'scale-105');
 }
 
 function init() {
@@ -401,22 +396,33 @@ function initBannerThemeAnimation() {
 
 	const htmlEl = document.documentElement;
 
-	const observer = new MutationObserver(() => {
-		const banner = document.getElementById('banner');
-		if (!banner || banner.classList.contains('opacity-0')) {
-			return;
+	const observer = new MutationObserver((mutationsList) => {
+		for (const mutation of mutationsList) {
+			if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+				const oldClassList = new Set(mutation.oldValue?.split(' ') || []);
+				const newClassList = new Set(htmlEl.className.split(' '));
+
+				const wasDark = oldClassList.has('dark');
+				const isDark = newClassList.has('dark');
+
+				if (wasDark !== isDark) {
+					const banner = document.getElementById('banner');
+					if (!banner || banner.classList.contains('opacity-0')) {
+						return;
+					}
+
+					banner.classList.add('no-transition');
+					banner.classList.add('opacity-0', 'scale-105');
+					void banner.offsetWidth;
+					banner.classList.remove('no-transition');
+					banner.classList.remove('opacity-0', 'scale-105');
+					return; 
+				}
+			}
 		}
-
-		banner.classList.add('no-transition');
-		banner.classList.add('opacity-0', 'scale-105');
-
-		void banner.offsetWidth;
-
-		banner.classList.remove('no-transition');
-		banner.classList.remove('opacity-0', 'scale-105');
 	});
 
-	observer.observe(htmlEl, { attributes: true, attributeFilter: ['class'] });
+	observer.observe(htmlEl, { attributes: true, attributeFilter: ['class'], attributeOldValue: true });
 }
 
 /* Load settings when entering the site */

@@ -55,8 +55,23 @@ const mainPanelTop = siteConfig.banner.enable
 {siteConfig.banner.enable && <div id="banner-wrapper" class={`absolute z-10 w-full transition duration-700 overflow-hidden`} style={`top: -${BANNER_HEIGHT_EXTEND}vh`}>
     <!-- Replaced ImageWrapper with a div for CSS background image control -->
     <!-- The background image and position are now controlled by CSS in Layout.astro -->
-    <div id="banner" class:list={["h-full transition duration-700 opacity-0 scale-105"]}>
-    </div>
+    <!-- Original div: <div id="banner" class:list={["h-full transition duration-700 opacity-0 scale-105"]}></div> -->
+
+    <!-- New ImageWrapper components for light and dark mode -->
+    <ImageWrapper
+        id="banner-light"
+        src={siteConfig.banner.src}
+        alt="Light mode banner"
+        position={siteConfig.banner.position}
+        class="h-full"
+    />
+    <ImageWrapper
+        id="banner-dark"
+        src={siteConfig.banner.darkSrc ? siteConfig.banner.darkSrc : siteConfig.banner.src}
+        alt="Dark mode banner"
+        position={siteConfig.banner.position}
+        class="h-full"
+    />
 </div>}
 
 <!-- Main content -->

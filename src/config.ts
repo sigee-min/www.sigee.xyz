@@ -17,8 +17,8 @@ export const siteConfig: SiteConfig = {
 	},
 	banner: {
 		enable: true,
-		src: "src/assets/images/banner.png", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
-		darkSrc: "src/assets/images/dark-banner.png", // Add dark mode banner image
+		src: "assets/images/banner.png", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
+		darkSrc: "assets/images/dark-banner.png", // Add dark mode banner image
 		position: "center", // Equivalent to object-position, only supports 'top', 'center', 'bottom'. 'center' by default
 		credit: {
 			enable: false, // Display the credit text of the banner image
