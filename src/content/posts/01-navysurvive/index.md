@@ -2,7 +2,7 @@
 title: 해군 SW개발병으로 살아남기
 published: 2025-06-27
 tags: [Navy, System]
-category: Dev
+category: DEV
 image: ./cover.png
 draft: false
 ---
@@ -27,7 +27,7 @@ draft: false
 초기 대안은 다음과 같았다.
 
 1.  본가의 데스크톱을 24시간 가동하여 원격으로 접속하기
-2.  본가의 데스크톱에 `vscode-server`를 구축하여 사용하기
+2.  본가의 데스크톱에 `code-server`를 구축하여 사용하기
 
 하지만 이 방안들은 몇 가지 명확한 한계가 있었다. 사지방의 인터넷은 사용자가 몰리는 시간에는 매우 불안정했으며, 개인 PC를 상시 가동할 경우 전기 요금 문제와 더불어 고장 시 다음 휴가까지 대처가 불가능하다는 위험이 있었다.
 

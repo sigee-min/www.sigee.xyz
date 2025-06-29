@@ -3,7 +3,7 @@ title: 해군 SW개발병 합격 수기
 published: 2025-06-28
 tags: [Navy]
 category: ETC
-image: https://private-user-images.githubusercontent.com/46314169/460311627-568c7be8-b81e-46a2-85b0-b04285eff93c.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NTEyMDY1MTcsIm5iZiI6MTc1MTIwNjIxNywicGF0aCI6Ii80NjMxNDE2OS80NjAzMTE2MjctNTY4YzdiZTgtYjgxZS00NmEyLTg1YjAtYjA0Mjg1ZWZmOTNjLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTA2MjklMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUwNjI5VDE0MTAxN1omWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPWEwMjk2NTdjNjZkNDA5NGM0NDYxMjI4MjM0ZTgyN2U0MzUyNDUxODZiODQ1MGJmYTE4ZjdlMTk1ZmE3ODY2ODEmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.EHBOFphwq2fxkw3xeet3QSKbHBKezsPbT3-iqwW4Yaw
+image: ./cover.png
 draft: false
 ---
 
@@ -54,7 +54,7 @@ draft: false
 
 마침내 발표 당일, 합격 통보를 확인하고서야 비로소 기나긴 불안감에서 벗어날 수 있었다. 놀랍게도 TO는 1명이었지만 최종 2명이 선발되었다. 1등과 불과 1점 차이로 2등이었던 나까지 추가로 합격한 것이다. 면접관분들이 나의 가능성을 좋게 봐주신 것인지, 혹은 예비 인원을 고려한 선발이었는지는 알 수 없지만, 그저 감사한 마음뿐이었다. 안도감과 함께, 비로소 편안한 마음으로 입대를 위한 주변 정리를 시작할 수 있었다.
 
-![합격](https://private-user-images.githubusercontent.com/46314169/460311629-12bce411-9f5e-419b-817e-8918cb46c912.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NTEyMDY1MTcsIm5iZiI6MTc1MTIwNjIxNywicGF0aCI6Ii80NjMxNDE2OS80NjAzMTE2MjktMTJiY2U0MTEtOWY1ZS00MTliLTgxN2UtODkxOGNiNDZjOTEyLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTA2MjklMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUwNjI5VDE0MTAxN1omWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPWFiMDJlYmYyMjVhYmY4OTJlOGVkZjc1NWFhZWI5Y2RiMGEyYWFlMjVhMDEzOGQ2NDVkNDk5MDc4MmI5NjQwNTYmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.MDPlsM7MqeOHSwvs85cX--OyHjiiVihMGbP-Af8fS_w)
+![합격](./images/01.png)
 
 
 ## 마무리
