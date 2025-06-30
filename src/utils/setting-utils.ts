@@ -28,20 +28,39 @@ export function setHue(hue: number): void {
 }
 
 export function applyThemeToDocument(theme: LIGHT_DARK_MODE) {
+	let isDark = false;
 	switch (theme) {
 		case LIGHT_MODE:
 			document.documentElement.classList.remove("dark");
+			isDark = false;
 			break;
 		case DARK_MODE:
 			document.documentElement.classList.add("dark");
+			isDark = true;
 			break;
 		case AUTO_MODE:
-			if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+			isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+			if (isDark) {
 				document.documentElement.classList.add("dark");
 			} else {
 				document.documentElement.classList.remove("dark");
 			}
 			break;
+	}
+
+	// --- Giscus Theme Sync ---
+	const giscusTheme = isDark ? "dark" : "light";
+
+	// 이 메시지는 사용자가 Giscus가 로드된 *후에* 테마를 변경할 때를 위한 것입니다.
+	// 초기 테마는 License.astro의 인라인 스크립트가 깜빡임 없이 설정합니다.
+	const iframe = document.querySelector<HTMLIFrameElement>(
+		"iframe.giscus-frame",
+	);
+	if (iframe?.contentWindow) {
+		iframe.contentWindow.postMessage(
+			{ giscus: { setConfig: { theme: giscusTheme } } },
+			"https://giscus.app",
+		);
 	}
 
 	// Set the theme for Expressive Code

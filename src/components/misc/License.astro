@@ -42,19 +42,29 @@ const postUrl = decodeURIComponent(Astro.url.toString());
     <Icon name="fa6-brands:creative-commons" class="transition text-[15rem] absolute pointer-events-none right-6 top-1/2 -translate-y-1/2 text-black/5 dark:text-white/5"></Icon>
 </div>
 
-<script src="https://giscus.app/client.js"
-        data-repo="sigee-min/www.sigee.xyz"
-        data-repo-id="R_kgDOPCTBLQ"
-        data-category="General"
-        data-category-id="DIC_kwDOPCTBLc4CsOn9"
-        data-mapping="pathname"
-        data-strict="0"
-        data-reactions-enabled="0"
-        data-emit-metadata="0"
-        data-input-position="bottom"
-        data-theme="preferred_color_scheme"
-        data-lang="ko"
-        data-loading="lazy"
-        crossorigin="anonymous"
-        async>
+<script is:inline>
+    (function() {
+      const giscusTheme = (() => {
+        const storedTheme = localStorage.getItem('theme');
+        if (storedTheme === 'light' || storedTheme === 'dark') return storedTheme;
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      })();
+
+      const script = document.createElement('script');
+      script.src = 'https://giscus.app/client.js';
+      script.async = true;
+      script.crossOrigin = 'anonymous';
+      script.setAttribute('data-repo', 'sigee-min/www.sigee.xyz');
+      script.setAttribute('data-repo-id', 'R_kgDOPCTBLQ');
+      script.setAttribute('data-category', 'General');
+      script.setAttribute('data-category-id', 'DIC_kwDOPCTBLc4CsOn9');
+      script.setAttribute('data-mapping', 'pathname');
+      script.setAttribute('data-strict', '0');
+      script.setAttribute('data-reactions-enabled', '0');
+      script.setAttribute('data-emit-metadata', '0');
+      script.setAttribute('data-input-position', 'bottom');
+      script.setAttribute('data-lang', 'ko');
+      script.setAttribute('data-theme', giscusTheme);
+      document.currentScript.parentElement.appendChild(script);
+    })();
 </script>
