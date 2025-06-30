@@ -132,9 +132,9 @@ ip netns exec red ping 10.16.0.3
 `ping` 명령이 성공적으로 응답을 받아 `red`와 `blue` Network Namespace 간에 네트워크 통신이 원활하게 이루어지고 있음을 확인할 수 있다.
 
 ```bash
-#PING 10.16.0.3 (10.16.0.3) 56(84) bytes of data.
-#64 bytes from 10.16.0.3: icmp_seq=1 ttl=64 time=0.039 ms
-#64 bytes from 10.16.0.3: icmp_seq=2 ttl=64 time=0.048 ms
+PING 10.16.0.3 (10.16.0.3) 56(84) bytes of data.
+64 bytes from 10.16.0.3: icmp_seq=1 ttl=64 time=0.039 ms
+64 bytes from 10.16.0.3: icmp_seq=2 ttl=64 time=0.048 ms
 ```
 
 ### 6\. Network Namespace 해제
