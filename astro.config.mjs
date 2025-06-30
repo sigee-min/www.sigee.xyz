@@ -26,7 +26,7 @@ import { remarkReadingTime } from "./src/plugins/remark-reading-time.mjs";
 
 // https://astro.build/config
 export default defineConfig({
-	site: "https://sigee-min.github.io",
+	site: "https://www.sigee.syz",
 	base: "/",
 	trailingSlash: "always",
 	integrations: [
@@ -155,7 +155,13 @@ export default defineConfig({
 		],
 	},
 	server: {
-		allowedHosts: ["blog-dev.aolda.net", "localhost", "127.0.0.1"],
+		allowedHosts: [
+			"blog-dev.aolda.net",
+			"sigee.syz",
+			"blog.sigee.syz",
+			"localhost",
+			"127.0.0.1",
+		],
 	},
 	vite: {
 		build: {
