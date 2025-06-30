@@ -28,5 +28,5 @@ All commands are run from the root of the project in your terminal.
 This project is licensed under the MIT License.
 
 ## ETC
-- [Blog](https://sigee-min.github.io)
+- [Blog](https://www.sigee.xyz)
 - [Reference](https://github.com/saicaca/fuwari/blob/main/docs/README.ko.md)
