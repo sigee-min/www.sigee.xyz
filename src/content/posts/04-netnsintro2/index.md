@@ -35,7 +35,7 @@ graph TD
             direction LR
             FwdChain["📋 FORWARD Chain<br/>Policy: DROP"]
             NatChain["🔄 NAT POSTROUTING<br/>MASQUERADE"]
-            NavyChain["⚓ NAVY Custom Chain<br/>- 10.16.0.0/24 → ACCEPT<br/>- Outgoing br0 → ACCEPT"]
+            NavyChain["⚓ NAVY Custom Chain<br/>- 10.16.0.0/24 &rarr; ACCEPT<br/>- Outgoing br0 &rarr; ACCEPT"]
         end
         
         subgraph "🔗 Virtual Ethernet Pairs"
@@ -46,14 +46,14 @@ graph TD
         subgraph "🔴 Network Namespace: red"
             direction TB
             veth1_red["🔌 veth1-red<br/>IP: 10.16.0.2/24"]
-            red_route["📍 Default Gateway<br/>→ 10.16.0.1"]
+            red_route["📍 Default Gateway<br/>&rarr; 10.16.0.1"]
             red_dns["🌐 DNS: 8.8.8.8"]
         end
         
         subgraph "🔵 Network Namespace: blue"
             direction TB
             veth1_blue["🔌 veth1-blue<br/>IP: 10.16.0.3/24"]
-            blue_route["📍 Default Gateway<br/>→ 10.16.0.1"]
+            blue_route["📍 Default Gateway<br/>&rarr; 10.16.0.1"]
             blue_dns["🌐 DNS: 8.8.8.8"]
         end
     end
@@ -81,15 +81,18 @@ graph TD
     veth1_blue --- blue_route
     veth1_blue --- blue_dns
     
-    %% Styling
-    classDef hostBox fill:#e1f5fe,stroke:#01579b,stroke-width:2px
-    classDef namespaceRed fill:#ffebee,stroke:#c62828,stroke-width:2px
-    classDef namespaceBlue fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    classDef netfilter fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
-    classDef interface fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    %% Styling (Dark Mode Optimized)
+    classDef default fill:#424242,stroke:#B0BEC5,stroke-width:1px,color:#ECEFF1;
+    classDef hostBox fill:#546E7A,stroke:#90CAF9,stroke-width:2px,color:#E0F7FA;
+    classDef namespaceRed fill:#7F0000,stroke:#EF9A9A,stroke-width:2px,color:#FFCDD2;
+    classDef namespaceBlue fill:#1A237E,stroke:#90CAF9,stroke-width:2px,color:#BBDEFB;
+    classDef netfilter fill:#4A148C,stroke:#CE93D8,stroke-width:2px,color:#F3E5F5;
+    classDef interface fill:#1B5E20,stroke:#A5D6A7,stroke-width:2px,color:#C8E6C9;
     
     class FwdChain,NatChain,NavyChain netfilter
     class enp0s3,br0,veth0_red,veth0_blue interface
+    class Internet,veth1_red,red_route,red_dns,veth1_blue,blue_route,blue_dns default
+    linkStyle default stroke:#E0E0E0,stroke-width:2px;
 ```
 
 ### 1\. Network Namespace 생성
