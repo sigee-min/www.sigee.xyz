@@ -80,6 +80,9 @@ importers:
       mdast-util-to-string:
         specifier: ^4.0.0
         version: 4.0.0
+      mermaid:
+        specifier: ^11.7.0
+        version: 11.7.0
       overlayscrollbars:
         specifier: ^2.11.4
         version: 2.11.4
@@ -89,9 +92,6 @@ importers:
       photoswipe:
         specifier: ^5.4.4
         version: 5.4.4
-      playwright:
-        specifier: ^1.53.2
-        version: 1.53.2
       reading-time:
         specifier: ^1.5.0
         version: 1.5.0
@@ -10523,13 +10523,15 @@ snapshots:
       exsolve: 1.0.4
       pathe: 2.0.3
 
-  playwright-core@1.53.2: {}
+  playwright-core@1.53.2:
+    optional: true
 
   playwright@1.53.2:
     dependencies:
       playwright-core: 1.53.2
     optionalDependencies:
       fsevents: 2.3.2
+    optional: true
 
   points-on-curve@0.2.0: {}
 

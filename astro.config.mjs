@@ -119,7 +119,7 @@ export default defineConfig({
 			parseDirectiveNode,
 		],
 		rehypePlugins: [
-			[rehypeMermaid, { strategy: "img-png", dark: true }],
+			[rehypeMermaid, { strategy: "pre-mermaid" }],
 			rehypeKatex,
 			rehypeSlug,
 			[
