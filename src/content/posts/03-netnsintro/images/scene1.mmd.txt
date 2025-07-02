@@ -1,0 +1,40 @@
+---
+config:
+  theme: neo-dark
+  layout: dagre
+  look: neo
+---
+flowchart LR
+  subgraph host["🖥️ Host"]
+    direction LR
+    veth_host["🔗"]
+
+    subgraph red_ns["🔴 Network Namespace Red"]
+      direction LR
+      veth_red["🔌 veth-red"]
+      ip_red["IP: 10.16.0.2/24"]
+      veth_red --- ip_red
+    end
+
+    subgraph blue_ns["🔵 Network Namespace Blue"]
+      direction LR
+      veth_blue["🔌 veth-blue"]
+      ip_blue["IP: 10.16.0.3/24"]
+      veth_blue --- ip_blue
+    end
+
+    veth_host -- "↔️" --- veth_red
+    veth_host -- "↔️" --- veth_blue
+  end
+
+  red_ns:::namespace
+  blue_ns:::namespace
+  veth_red:::interface
+  veth_blue:::interface
+  ip_red:::default
+  ip_blue:::default
+
+  classDef default fill:#424242,stroke:#B0BEC5,stroke-width:1px,color:#ECEFF1
+  classDef hostBox fill:#546E7A,stroke:#90CAF9,stroke-width:2px,color:#E0F7FA
+  classDef namespace fill:#424242,stroke:#B0BEC5,stroke-width:2px,color:#ECEFF1
+  classDef interface fill:#1B5E20,stroke:#A5D6A7,stroke-width:2px,color:#C8E6C9

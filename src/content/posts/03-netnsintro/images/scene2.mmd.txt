@@ -1,0 +1,36 @@
+---
+config:
+  theme: neo-dark
+  layout: fixed
+  look: neo
+---
+flowchart TD
+ subgraph subGraph3["🔗 Bridge: br0"]
+        veth0_red["veth0-red"]
+        veth0_blue["veth0-blue"]
+  end
+ subgraph subGraph4["🔴 Network Namespace: red"]
+    direction TB
+        veth1_red["🔌 veth1-red<br>IP: 10.16.0.2/24"]
+  end
+ subgraph subGraph5["🔵 Network Namespace: blue"]
+    direction TB
+        veth1_blue["🔌 veth1-blue<br>IP: 10.16.0.3/24"]
+  end
+ subgraph subGraph6["🖥️ Host Machine"]
+    direction TB
+        subGraph3
+        subGraph4
+        subGraph5
+  end
+    veth0_red -- 🔗 veth pair --- veth1_red
+    veth0_blue -- 🔗 veth pair --- veth1_blue
+     veth0_red:::interface
+     veth0_blue:::interface
+     veth1_red:::interface
+     veth1_blue:::interface
+    classDef default fill:#424242,stroke:#B0BEC5,stroke-width:1px,color:#ECEFF1
+    classDef hostBox fill:#546E7A,stroke:#90CAF9,stroke-width:2px,color:#E0F7FA
+    classDef namespaceRed fill:#7F0000,stroke:#EF9A9A,stroke-width:2px,color:#FFCDD2
+    classDef namespaceBlue fill:#1A237E,stroke:#90CAF9,stroke-width:2px,color:#BBDEFB
+    classDef interface fill:#1B5E20,stroke:#A5D6A7,stroke-width:2px,color:#C8E6C9
