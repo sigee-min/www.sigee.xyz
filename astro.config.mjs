@@ -114,10 +114,6 @@ export default defineConfig({
 			parseDirectiveNode,
 		],
 		rehypePlugins: [
-<<<<<<< HEAD
-			[rehypeMermaid, { strategy: "pre-mermaid" }],
-=======
->>>>>>> parent of a272714 (post04)
 			rehypeKatex,
 			rehypeSlug,
 			[
