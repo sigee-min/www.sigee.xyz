@@ -9,7 +9,9 @@ draft: false
 
 ## 배경
 
-저번 글에서 Bridge, veth, Network Namespace를 이용하여 간단한 가상 네트워크를 구성하고 통신하는 것을 구현했다. 자세한 내용은 [다음 링크](/posts/03-netnsintro/)에서 확인할 수 있다. 이번 글에서는 한 단계 더 나아가, **bridge를 통하는 네트워크 트래픽을 Iptables를 통해 효과적으로 제어하는 방법**에 대해 다룰 계획이다. 또한, 구성된 가상 네트워크가 외부 인터넷과 원활하게 통신할 수 있도록 **bridge에 IP 주소를 할당하고 이를 gateway로 설정하는 작업**은 물론, **NAT (Network Address Translation)를 위한 Iptables 테이블 설정**도 함께 진행해 볼 예정이다.
+저번 글에서 Bridge, veth, Network Namespace를 이용하여 간단한 가상 네트워크를 구성하고 통신하는 것을 구현했다. 자세한 내용은 [다음 링크](/posts/03-netnsintro/)에서 확인할 수 있다. 이번 글에서는 한 단계 더 나아가, **bridge를 통하는 네트워크 트래픽을 Iptables를 통해 효과적으로 제어하는 방법**에 대해 다룰 계획이다. 
+
+또한, 구성된 가상 네트워크가 외부 인터넷과 원활하게 통신할 수 있도록 **bridge에 IP 주소를 할당하고 이를 gateway로 설정하는 작업**은 물론, **NAT (Network Address Translation)를 위한 Iptables 테이블 설정**도 함께 진행해 볼 예정이다.
 
 ---
 
@@ -17,83 +19,7 @@ draft: false
 
 이 시나리오는 **Bridge를 활용하여 여러 Network Namespace 간의 네트워크 통신을 구현하는 방법**을 확인하고 직접 구현한다. 가급적 바로 **제거해도 상관없는 깨끗한 VM 환경**에서 실행하는 것을 추천한다. Docker 등에서 실제 어플리케이션을 돌리고 있는 상황이라면 문제가 생길 수 있다. 글의 환경은 **Ubuntu 24.04 버전**을 사용하고 있다.
 
-```mermaid
-graph TD
-    subgraph "🌐 External Network"
-        Internet[인터넷]
-    end
-    
-    subgraph "🖥️ Host Machine (Linux System)"
-        direction TB
-        
-        subgraph "🔌 Network Interfaces"
-            enp0s3["🌍 External Interface<br/>enp0s3"]
-            br0["🌉 Bridge: br0<br/>IP: 10.16.0.1/24"]
-        end
-        
-        subgraph "🛡️ Netfilter (iptables)"
-            direction LR
-            FwdChain["📋 FORWARD Chain<br/>Policy: DROP"]
-            NatChain["🔄 NAT POSTROUTING<br/>MASQUERADE"]
-            NavyChain["⚓ NAVY Custom Chain<br/>- 10.16.0.0/24 &rarr; ACCEPT<br/>- Outgoing br0 &rarr; ACCEPT"]
-        end
-        
-        subgraph "🔗 Virtual Ethernet Pairs"
-            veth0_red["veth0-red"]
-            veth0_blue["veth0-blue"]
-        end
-        
-        subgraph "🔴 Network Namespace: red"
-            direction TB
-            veth1_red["🔌 veth1-red<br/>IP: 10.16.0.2/24"]
-            red_route["📍 Default Gateway<br/>&rarr; 10.16.0.1"]
-            red_dns["🌐 DNS: 8.8.8.8"]
-        end
-        
-        subgraph "🔵 Network Namespace: blue"
-            direction TB
-            veth1_blue["🔌 veth1-blue<br/>IP: 10.16.0.3/24"]
-            blue_route["📍 Default Gateway<br/>&rarr; 10.16.0.1"]
-            blue_dns["🌐 DNS: 8.8.8.8"]
-        end
-    end
-    
-    %% External connections
-    Internet ---|"📡 External Traffic"| enp0s3
-    
-    %% Bridge connections
-    enp0s3 ---|"🔗"| br0
-    veth0_red ---|"🔗"| br0
-    veth0_blue ---|"🔗"| br0
-    
-    %% Netfilter flow
-    br0 ---|"📦 Packet Flow"| FwdChain
-    FwdChain ---|"🔍 Custom Rules"| NavyChain
-    br0 ---|"🔄 NAT Processing"| NatChain
-    
-    %% Virtual ethernet pairs
-    veth0_red ---|"🔗 veth pair"| veth1_red
-    veth0_blue ---|"🔗 veth pair"| veth1_blue
-    
-    %% Namespace internal connections
-    veth1_red --- red_route
-    veth1_red --- red_dns
-    veth1_blue --- blue_route
-    veth1_blue --- blue_dns
-    
-    %% Styling (Dark Mode Optimized)
-    classDef default fill:#424242,stroke:#B0BEC5,stroke-width:1px,color:#ECEFF1;
-    classDef hostBox fill:#546E7A,stroke:#90CAF9,stroke-width:2px,color:#E0F7FA;
-    classDef namespaceRed fill:#7F0000,stroke:#EF9A9A,stroke-width:2px,color:#FFCDD2;
-    classDef namespaceBlue fill:#1A237E,stroke:#90CAF9,stroke-width:2px,color:#BBDEFB;
-    classDef netfilter fill:#4A148C,stroke:#CE93D8,stroke-width:2px,color:#F3E5F5;
-    classDef interface fill:#1B5E20,stroke:#A5D6A7,stroke-width:2px,color:#C8E6C9;
-    
-    class FwdChain,NatChain,NavyChain netfilter
-    class enp0s3,br0,veth0_red,veth0_blue interface
-    class Internet,veth1_red,red_route,red_dns,veth1_blue,blue_route,blue_dns default
-    linkStyle default stroke:#E0E0E0,stroke-width:2px;
-```
+![diagram](./images/end-diagram.png)
 
 ### 1\. Network Namespace 생성
 

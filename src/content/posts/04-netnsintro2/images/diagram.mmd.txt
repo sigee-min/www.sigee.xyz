@@ -1,0 +1,75 @@
+---
+config:
+  theme: neo-dark
+  layout: dagre
+  look: neo
+---
+flowchart TD
+ subgraph subGraph0["🌐 External Network"]
+        Internet["인터넷"]
+  end
+ subgraph subGraph1["🔌 Network Interfaces"]
+        enp0s3["🌍 External Interface<br>enp0s3"]
+        br0["🌉 Bridge: br0<br>IP: 10.16.0.1/24"]
+  end
+ subgraph subGraph2["🛡️ Netfilter (iptables)"]
+    direction LR
+        FwdChain["📋 FORWARD Chain<br>Policy: DROP"]
+        NatChain["🔄 NAT POSTROUTING<br>MASQUERADE"]
+        NavyChain["⚓ NAVY Custom Chain<br>- 10.16.0.0/24 → ACCEPT<br>- Outgoing br0 → ACCEPT"]
+  end
+ subgraph subGraph3["🔗 Virtual Ethernet Pairs"]
+        veth0_red["veth0-red"]
+        veth0_blue["veth0-blue"]
+  end
+ subgraph subGraph4["🔴 Network Namespace: red"]
+    direction TB
+        veth1_red["🔌 veth1-red<br>IP: 10.16.0.2/24"]
+        red_route["📍 Default Gateway<br>→ 10.16.0.1"]
+        red_dns["🌐 DNS: 8.8.8.8"]
+  end
+ subgraph subGraph5["🔵 Network Namespace: blue"]
+    direction TB
+        veth1_blue["🔌 veth1-blue<br>IP: 10.16.0.3/24"]
+        blue_route["📍 Default Gateway<br>→ 10.16.0.1"]
+        blue_dns["🌐 DNS: 8.8.8.8"]
+  end
+ subgraph subGraph6["🖥️ Host Machine (Linux System)"]
+    direction TB
+        subGraph1
+        subGraph2
+        subGraph3
+        subGraph4
+        subGraph5
+  end
+    Internet -- 📡 External Traffic --- enp0s3
+    enp0s3 -- 🔗 --- br0
+    veth0_red -- 🔗 --- br0
+    veth0_blue -- 🔗 --- br0
+    br0 -- 📦 Packet Flow --- FwdChain
+    FwdChain -- 🔍 Custom Rules --- NavyChain
+    br0 -- 🔄 NAT Processing --- NatChain
+    veth0_red -- 🔗 veth pair --- veth1_red
+    veth0_blue -- 🔗 veth pair --- veth1_blue
+    veth1_red --- red_route & red_dns
+    veth1_blue --- blue_route & blue_dns
+     Internet:::default
+     enp0s3:::interface
+     br0:::interface
+     FwdChain:::netfilter
+     NatChain:::netfilter
+     NavyChain:::netfilter
+     veth0_red:::interface
+     veth0_blue:::interface
+     veth1_red:::default
+     red_route:::default
+     red_dns:::default
+     veth1_blue:::default
+     blue_route:::default
+     blue_dns:::default
+    classDef default fill:#424242,stroke:#B0BEC5,stroke-width:1px,color:#ECEFF1
+    classDef hostBox fill:#546E7A,stroke:#90CAF9,stroke-width:2px,color:#E0F7FA
+    classDef namespaceRed fill:#7F0000,stroke:#EF9A9A,stroke-width:2px,color:#FFCDD2
+    classDef namespaceBlue fill:#1A237E,stroke:#90CAF9,stroke-width:2px,color:#BBDEFB
+    classDef netfilter fill:#4A148C,stroke:#CE93D8,stroke-width:2px,color:#F3E5F5
+    classDef interface fill:#1B5E20,stroke:#A5D6A7,stroke-width:2px,color:#C8E6C9
