@@ -13,6 +13,8 @@ draft: false
 
 또한, 구성된 가상 네트워크가 외부 인터넷과 원활하게 통신할 수 있도록 **bridge에 IP 주소를 할당하고 이를 gateway로 설정하는 작업**은 물론, **NAT (Network Address Translation)를 위한 Iptables 테이블 설정**도 함께 진행해 볼 예정이다.
 
+이번에 **Mermaid**를 이용해 **인프라 다이어그램**을 그리는 법을 공부하고 시도해보고 있다. 아래 시나리오 이미지를 Mermaid 코드 방식으로 그려보았다. 생각보다 오브젝트들을 자유롭게 배치하기는 힘들지만, 코드로 다이어그램을 그릴 수 있으니 **LLM 모델**을 통해 뽑아내기에는 훨씬 좋을 것 같다. 개발자인 나에게는 이것이 그림보다 편하다. 이 블로그에서 마크다운에 Mermaid를 넣어 렌더링하는 방식도 가능했지만, 생각보다 가독성이 좋지 않아 **Mermaid.live**에서 코드로 그린 이미지로 가져오기로 했다.
+
 ---
 
 ## 시나리오 - Iptables와 Bridge를 활용한 Network Namespace 네트워크 제어
@@ -209,6 +211,9 @@ sudo ip a add 10.16.0.1/24 dev br0
 
 # red Network Namespace에 기본 게이트웨이 설정
 ip netns exec red ip route add 0.0.0.0/0 via 10.16.0.1 dev veth1-red
+
+# blue Network Namespace에 기본 게이트웨이 설정
+ip netns exec blue ip route add 0.0.0.0/0 via 10.16.0.1 dev veth1-blue
 
 # red Network Namespace 내부의 라우팅 테이블 확인
 ip netns exec red ip route
