@@ -1,5 +1,5 @@
 ---
-title: 해군 SW개발병 합격 수기
+title: 자대에서 쓰는 해군 SW개발병 합격 수기
 published: 2025-06-28
 tags: [Navy]
 category: ETC

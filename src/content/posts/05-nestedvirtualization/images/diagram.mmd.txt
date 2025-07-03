@@ -1,0 +1,86 @@
+---
+config:
+  theme: neo-dark
+  layout: dagre
+  look: neo
+---
+
+graph LR
+    subgraph "🌐 External Network"
+        INTERNET["☁️ Internet<br/>8.8.8.8"]
+    end
+    
+    subgraph "🏢 Oracle Cloud - Ampere A1 Instance"
+        subgraph "🖥️ Host OS (Ubuntu 24.04) - 4 cores, 24GB RAM"
+            
+            subgraph "🔥 Network Management"
+                IPTABLES["iptables NAT<br/>MASQUERADE"]
+                FORWARD["IP Forwarding<br/>Enabled"]
+                ENP0S3["🌐 Physical NIC<br/>enp0s3"]
+            end
+            
+            subgraph "🌉 Network Bridge Layer"
+                BR0["🌉 Linux Bridge<br/>br0<br/>10.16.0.1/24<br/>(Gateway)"]
+            end
+            
+            subgraph "⚡ QEMU Hypervisor"
+                QEMU_PROCESS["QEMU Process<br/>qemu-system-x86_64"]
+                TAP0["🔌 TAP Interface<br/>tap0<br/>(created by qemu-ifup.sh)"]
+                
+                subgraph "💻 Guest VM"
+                    VM["CirrOS VM<br/>💾 512MB RAM<br/>🧠 1 vCPU<br/>🔗 eth0: 10.16.0.5/24"]
+                end
+            end
+            
+            subgraph "📦 Network Namespace"
+                NETNS_CONTAINER["Namespace: navy<br/>📦 Isolated Network Stack"]
+                VETH_NAVY["🔗 veth-navy<br/>10.16.0.2/24<br/>(inside NetNS)"]
+            end
+            
+            subgraph "🔗 veth Pair Connection"
+                VETH_BR["🔗 veth-br<br/>(host side)"]
+                VETH_PAIR["↔️ veth pair<br/>Virtual Ethernet Cable"]
+            end
+        end
+    end
+    
+    %% Main Network Flow
+    INTERNET <-->|External Traffic| ENP0S3
+    ENP0S3 <-->|NAT Rules| IPTABLES
+    IPTABLES <-->|Forwarding| BR0
+    
+    %% VM Connection
+    VM -.->|virtio-net-pci driver| TAP0
+    TAP0 -->|Bridge Member| BR0
+    QEMU_PROCESS -.->|Controls| TAP0
+    QEMU_PROCESS -.->|Runs| VM
+    
+    %% veth Connection
+    VETH_NAVY -.->|Virtual Cable| VETH_PAIR
+    VETH_PAIR -.->|Virtual Cable| VETH_BR
+    VETH_BR -->|Bridge Member| BR0
+    NETNS_CONTAINER -.->|Contains| VETH_NAVY
+    
+    %% Communication Paths
+    VM -.->|ping 10.16.0.2| VETH_NAVY
+    VETH_NAVY -.->|ping 10.16.0.5| VM
+    
+    %% Styling
+    classDef vmClass fill:#ff6b6b,stroke:#fff,stroke-width:3px,color:#fff
+    classDef netnsClass fill:#4ecdc4,stroke:#fff,stroke-width:3px,color:#fff
+    classDef bridgeClass fill:#45b7d1,stroke:#fff,stroke-width:3px,color:#fff
+    classDef interfaceClass fill:#96ceb4,stroke:#fff,stroke-width:2px,color:#fff
+    classDef hostClass fill:#ffeaa7,stroke:#fff,stroke-width:2px,color:#333
+    classDef internetClass fill:#a29bfe,stroke:#fff,stroke-width:3px,color:#fff
+    classDef rulesClass fill:#fd79a8,stroke:#fff,stroke-width:2px,color:#fff
+    classDef qemuClass fill:#ff8a65,stroke:#fff,stroke-width:2px,color:#fff
+    classDef vethClass fill:#81c784,stroke:#fff,stroke-width:2px,color:#fff
+    
+    class VM vmClass
+    class NETNS_CONTAINER,VETH_NAVY netnsClass
+    class BR0 bridgeClass
+    class TAP0,ENP0S3 interfaceClass
+    class INTERNET internetClass
+    class IPTABLES,FORWARD rulesClass
+    class QEMU_PROCESS qemuClass
+    class VETH_BR,VETH_PAIR vethClass
