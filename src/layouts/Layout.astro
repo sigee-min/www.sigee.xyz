@@ -26,9 +26,11 @@ interface Props {
 	description?: string;
 	lang?: string;
 	setOGTypeArticle?: boolean;
+	ogImage?: string;
 }
 
-let { title, banner, description, lang, setOGTypeArticle } = Astro.props;
+let { title, banner, description, lang, setOGTypeArticle, ogImage } =
+	Astro.props;
 
 // apply a class to the body element to decide the height of the banner, only used for initial page load
 // Swup can update the body for each page visit, but it's after the page transition, causing a delay for banner height change
@@ -63,6 +65,20 @@ const bannerOffsetByPosition = {
 };
 const bannerOffset =
 	bannerOffsetByPosition[siteConfig.banner.position || "center"];
+
+const canonicalPath = `${Astro.url.pathname}${Astro.url.search}`;
+const canonicalUrl = Astro.site
+	? new URL(canonicalPath, Astro.site).toString()
+	: Astro.url.toString();
+
+const defaultSocialImage = "/favicon/favicon-light-192.png";
+const socialImagePath = ogImage || defaultSocialImage;
+const socialImageUrl =
+	socialImagePath.startsWith("http://") || socialImagePath.startsWith("https://")
+		? socialImagePath
+		: Astro.site
+			? new URL(socialImagePath, Astro.site).toString()
+			: socialImagePath;
 ---
 
 <!DOCTYPE html>
@@ -76,11 +92,15 @@ const bannerOffset =
 		<meta charset="UTF-8" />
 		<meta name="description" content={description || pageTitle}>
 		<meta name="author" content={profileConfig.name}>
+		<meta name="robots" content="index,follow,max-image-preview:large">
+		<link rel="canonical" href={canonicalUrl}>
 
 		<meta property="og:site_name" content={siteConfig.title}>
-		<meta property="og:url" content={Astro.url}>
+		<meta property="og:url" content={canonicalUrl}>
 		<meta property="og:title" content={pageTitle}>
 		<meta property="og:description" content={description || pageTitle}>
+		<meta property="og:image" content={socialImageUrl}>
+		<meta property="og:image:alt" content={pageTitle}>
 		{setOGTypeArticle ? (
         <meta property="og:type" content="article" />
         ) : (
@@ -88,9 +108,10 @@ const bannerOffset =
         )}
 
 		<meta name="twitter:card" content="summary_large_image">
-		<meta property="twitter:url" content={Astro.url}>
+		<meta property="twitter:url" content={canonicalUrl}>
 		<meta name="twitter:title" content={pageTitle}>
 		<meta name="twitter:description" content={description || pageTitle}>
+		<meta name="twitter:image" content={socialImageUrl}>
 
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />

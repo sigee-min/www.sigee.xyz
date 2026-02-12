@@ -1,6 +1,7 @@
 ---
 title: 클라우드 VM 속에 VM 띄우고 Network Namespace와 통신 구현하기
 published: 2025-07-03
+description: Oracle Cloud VM에서 QEMU 기반 가상머신을 띄우고 NetNS와 VM 간 통신을 구성한 실험 과정을 기록했다.
 tags: [Linux, Cloud]
 category: System
 image: ./cover.png

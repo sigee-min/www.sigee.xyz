@@ -1,6 +1,7 @@
 ---
 title: 해군 SW개발병으로 살아남기
 published: 2025-06-27
+description: 군 복무 중 학습 기록을 지속하기 위해 클라우드 기반 원격 개발환경(code-server)을 구축한 과정과 시행착오를 정리했다.
 tags: [Navy, System]
 category: DEV
 image: ./cover.png

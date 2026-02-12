@@ -1,6 +1,7 @@
 ---
 title: 해군 SW개발병 합격 수기
 published: 2025-06-28
+description: 산업기능요원 좌절 이후 해군 SW개발병에 지원해 합격하기까지의 준비 과정과 면접 경험을 기록했다.
 tags: [Navy]
 category: ETC
 image: ./cover.png
