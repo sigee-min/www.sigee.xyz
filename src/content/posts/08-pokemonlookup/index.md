@@ -5,7 +5,7 @@ description: 군 복무 중 휴대폰으로 포켓몬 팬게임을 플레이하�
 image: ./images/03-browser-view.png
 tags: [pokemon, react, vite, ux, seo]
 category: dev
-draft: true
+draft: false
 ---
 
 ## 배경
