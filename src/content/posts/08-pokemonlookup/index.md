@@ -1,7 +1,7 @@
 ---
 title: 포켓몬 팬게임 하면서 상성 판단을 빠르게 하려고 만든 검색 도구 이야기
 published: 2026-02-18
-description: 군 복무 중 휴대폰으로 포켓몬 팬게임을 플레이하며 겪은 불편을 해결하기 위해 pokemon-lookup을 만들었던 과정을 정리한 회고.
+description: 군 복무 중 휴대폰으로 포켓몬 팬게임을 플레이하며 겪은 불편을 해결하기 위해 상성 검색 도구를 만든 과정을 정리한 회고.
 image: ./images/03-browser-view.png
 tags: [pokemon, react, vite, ux, seo]
 category: dev
