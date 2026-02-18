@@ -2,8 +2,8 @@
 title: Network Namespace, veth, Bridge으로 리눅스 가상 네트워크 시나리오 구축하기
 published: 2025-06-30
 description: Network Namespace와 veth를 활용해 리눅스 가상 네트워크를 직접 구성하고 통신 원리를 실습 중심으로 정리했다.
-tags: [Linux, Network, System]
-category: System
+tags: [linux, network, system]
+category: system
 image: ./cover.png
 draft: false
 ---

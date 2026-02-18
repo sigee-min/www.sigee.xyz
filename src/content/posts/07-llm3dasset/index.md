@@ -3,8 +3,8 @@ title: 대형 모델로 만든 3D 에셋, 사용자 프로젝트에 바로 넣�
 published: 2026-02-12
 description: 대형 모델 기반 3D 에셋 생성 실험을 Ashfox 프로젝트로 전환하며 겪은 고민과 시도를 정리한 기록.
 image: /images/posts/07-llm3dasset/ashfox-animation.gif
-tags: [AI, 3D, MCP, Ashfox]
-category: DEV
+tags: [ai, 3d, mcp, ashfox]
+category: dev
 draft: false
 ---
 

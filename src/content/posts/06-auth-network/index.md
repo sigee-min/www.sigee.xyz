@@ -2,8 +2,8 @@
 title: 내부망 없이 인프라 관리 환경 구축하기 (Kubernetes, Keycloak, Oauth2 Proxy, Nginx Ingress)
 published: 2025-07-14
 description: VPN 없이 인프라 관리 도메인에 인증·인가를 적용하기 위해 Kubernetes, Keycloak, OAuth2 Proxy 구성을 정리했다.
-tags: [Linux, Cloud, Kubernetes]
-category: System
+tags: [linux, cloud, kubernetes]
+category: system
 image: ./cover.png
 draft: false
 ---

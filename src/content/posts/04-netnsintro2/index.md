@@ -2,8 +2,8 @@
 title: Iptables와 Bridge로 Network Namespace 내부 통신 및 외부 인터넷 연결 제어하기
 published: 2025-07-01
 description: Bridge와 iptables, NAT 설정으로 Network Namespace 내부·외부 통신을 제어하는 실습 과정을 다룬다.
-tags: [Linux, Network, System]
-category: System
+tags: [linux, network, system]
+category: system
 image: ./cover.png
 draft: false
 ---
