@@ -91,6 +91,13 @@
         }
     }
 
+    .mermaid-diagram {
+        @apply my-4 rounded-xl bg-[var(--codeblock-bg)] p-4 overflow-x-auto border border-[var(--line-divider)];
+    }
+    .mermaid-diagram svg {
+        @apply block max-w-full h-auto;
+    }
+
 
     ul, ol {
         li::marker {

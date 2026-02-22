@@ -14,30 +14,103 @@ const className = Astro.props.class;
 </div>
 
 <script>
-document.addEventListener("click", function (e: MouseEvent) {
-    const target = e.target as Element | null;
-    if (target && target.classList.contains("copy-btn")) {
-        const preEle = target.closest("pre");
-        const codeEle = preEle?.querySelector("code");
-        const code = Array.from(codeEle?.querySelectorAll(".code:not(summary *)") ?? [])
-            .map(el => el.textContent)
-            .map(t => t === "\n" ? "" : t)
-            .join("\n");
-        navigator.clipboard.writeText(code);
+const INIT_KEY = "__sigee_markdown_inited__";
 
-        const timeoutId = target.getAttribute("data-timeout-id");
-        if (timeoutId) {
-            clearTimeout(parseInt(timeoutId));
-        }
+function extractCodeFromPre(preEle: Element): string {
+    const codeEle = preEle.querySelector("code");
+    return Array.from(codeEle?.querySelectorAll(".code:not(summary *)") ?? [])
+        .map(el => el.textContent)
+        .map(t => t === "\n" ? "" : t)
+        .join("\n")
+        .trim();
+}
 
-        target.classList.add("success");
-
-        // 设置新的timeout并保存ID到按钮的自定义属性中
-        const newTimeoutId = setTimeout(() => {
-            target.classList.remove("success");
-        }, 1000);
-
-        target.setAttribute("data-timeout-id", newTimeoutId.toString());
+let mermaidPromise: Promise<any> | null = null;
+function getMermaid() {
+    if (!mermaidPromise) {
+        mermaidPromise = import("mermaid").then((m: any) => m.default ?? m);
     }
-});
+    return mermaidPromise;
+}
+
+async function renderMermaidDiagrams() {
+    const preNodes = Array.from(document.querySelectorAll<HTMLPreElement>('pre[data-language="mermaid"]'));
+    if (preNodes.length === 0) return;
+
+    const mermaid = await getMermaid();
+    mermaid.initialize({
+        startOnLoad: false,
+        securityLevel: "strict",
+        theme: document.documentElement.classList.contains("dark") ? "dark" : "default",
+    });
+
+    const nodes: HTMLElement[] = [];
+    for (const pre of preNodes) {
+        const source = extractCodeFromPre(pre);
+        if (!source) continue;
+
+        const wrapper = document.createElement("div");
+        wrapper.className = "mermaid-diagram";
+
+        const diagram = document.createElement("div");
+        diagram.className = "mermaid";
+        diagram.textContent = source;
+        wrapper.appendChild(diagram);
+
+        const replaceTarget = pre.closest(".expressive-code") ?? pre;
+        replaceTarget.replaceWith(wrapper);
+        nodes.push(diagram);
+    }
+
+    if (nodes.length === 0) return;
+    try {
+        await mermaid.run({ nodes });
+    } catch (e) {
+        console.error("[mermaid] render failed", e);
+    }
+}
+
+function setupMermaidHooks() {
+    void renderMermaidDiagrams();
+
+    const hook = () => void renderMermaidDiagrams();
+    const swup = (window as any)?.swup;
+    if (swup?.hooks) {
+        swup.hooks.on("page:view", hook);
+        return;
+    }
+    document.addEventListener("swup:enable", () => {
+        (window as any).swup.hooks.on("page:view", hook);
+    });
+}
+
+if (!(window as any)[INIT_KEY]) {
+    (window as any)[INIT_KEY] = true;
+
+    document.addEventListener("click", function (e: MouseEvent) {
+        const target = e.target as Element | null;
+        if (target && target.classList.contains("copy-btn")) {
+            const preEle = target.closest("pre");
+            if (!preEle) return;
+            const code = extractCodeFromPre(preEle);
+            navigator.clipboard.writeText(code);
+
+            const timeoutId = target.getAttribute("data-timeout-id");
+            if (timeoutId) {
+                clearTimeout(parseInt(timeoutId));
+            }
+
+            target.classList.add("success");
+
+            // 设置新的timeout并保存ID到按钮的自定义属性中
+            const newTimeoutId = setTimeout(() => {
+                target.classList.remove("success");
+            }, 1000);
+
+            target.setAttribute("data-timeout-id", newTimeoutId.toString());
+        }
+    });
+
+    setupMermaidHooks();
+}
 </script>
