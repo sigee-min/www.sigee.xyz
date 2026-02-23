@@ -17,12 +17,44 @@ const className = Astro.props.class;
 const INIT_KEY = "__sigee_markdown_inited__";
 
 function extractCodeFromPre(preEle: Element): string {
+    const storedSource = preEle.getAttribute("data-mermaid-source");
+    if (storedSource) return storedSource;
+
     const codeEle = preEle.querySelector("code");
-    return Array.from(codeEle?.querySelectorAll(".code:not(summary *)") ?? [])
+    if (!codeEle) return "";
+
+    const expressiveCodeText = Array.from(codeEle.querySelectorAll(".code:not(summary *)"))
         .map(el => el.textContent)
         .map(t => t === "\n" ? "" : t)
         .join("\n")
         .trim();
+
+    if (expressiveCodeText.length > 0) return expressiveCodeText;
+    return (codeEle.textContent ?? "").trim();
+}
+
+function findMermaidPreNodes(): HTMLPreElement[] {
+    const preNodes = new Set<HTMLPreElement>();
+
+    for (const pre of document.querySelectorAll<HTMLPreElement>('pre[data-language="mermaid" i]')) {
+        preNodes.add(pre);
+    }
+
+    for (const node of document.querySelectorAll<HTMLElement>('[data-language="mermaid" i]')) {
+        if (node instanceof HTMLPreElement) {
+            preNodes.add(node);
+            continue;
+        }
+        const pre = node.querySelector("pre");
+        if (pre) preNodes.add(pre);
+    }
+
+    for (const code of document.querySelectorAll<HTMLElement>('pre code.language-mermaid, pre code[class*="language-mermaid"]')) {
+        const pre = code.closest("pre");
+        if (pre) preNodes.add(pre);
+    }
+
+    return Array.from(preNodes);
 }
 
 let mermaidPromise: Promise<any> | null = null;
@@ -34,7 +66,7 @@ function getMermaid() {
 }
 
 async function renderMermaidDiagrams() {
-    const preNodes = Array.from(document.querySelectorAll<HTMLPreElement>('pre[data-language="mermaid"]'));
+    const preNodes = findMermaidPreNodes();
     if (preNodes.length === 0) return;
 
     const mermaid = await getMermaid();
@@ -46,19 +78,32 @@ async function renderMermaidDiagrams() {
 
     const nodes: HTMLElement[] = [];
     for (const pre of preNodes) {
+        if (pre.dataset.mermaidRendered === "true") continue;
+
         const source = extractCodeFromPre(pre);
         if (!source) continue;
-
-        const wrapper = document.createElement("div");
-        wrapper.className = "mermaid-diagram";
 
         const diagram = document.createElement("div");
         diagram.className = "mermaid";
         diagram.textContent = source;
+
+        if (pre.closest(".frame")) {
+            const code = pre.querySelector("code");
+            if (!code) continue;
+
+            code.textContent = "";
+            code.appendChild(diagram);
+            pre.dataset.mermaidRendered = "true";
+            pre.dataset.mermaidSource = source;
+            nodes.push(diagram);
+            continue;
+        }
+
+        const wrapper = document.createElement("div");
+        wrapper.className = "mermaid-diagram";
         wrapper.appendChild(diagram);
 
-        const replaceTarget = pre.closest(".expressive-code") ?? pre;
-        replaceTarget.replaceWith(wrapper);
+        pre.replaceWith(wrapper);
         nodes.push(diagram);
     }
 

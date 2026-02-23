@@ -94,6 +94,15 @@
     .mermaid-diagram {
         @apply my-4 rounded-xl bg-[var(--codeblock-bg)] p-4 overflow-x-auto border border-[var(--line-divider)];
     }
+
+    .frame pre[data-mermaid-rendered="true"] > code {
+        padding-inline: var(--ec-codePadInl);
+    }
+
+    .frame pre[data-mermaid-rendered="true"] > code > .mermaid {
+        margin: 0;
+    }
+
     .mermaid-diagram svg {
         @apply block max-w-full h-auto;
     }
