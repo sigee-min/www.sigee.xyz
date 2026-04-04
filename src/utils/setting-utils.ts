@@ -68,6 +68,10 @@ export function applyThemeToDocument(theme: LIGHT_DARK_MODE) {
 		"data-theme",
 		expressiveCodeConfig.theme,
 	);
+
+	document.dispatchEvent(
+		new CustomEvent("themechange", { detail: { isDark } }),
+	);
 }
 
 export function setTheme(theme: LIGHT_DARK_MODE): void {

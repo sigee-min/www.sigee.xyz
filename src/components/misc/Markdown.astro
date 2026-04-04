@@ -65,6 +65,42 @@ function getMermaid() {
     return mermaidPromise;
 }
 
+function getMermaidTheme() {
+    return document.documentElement.classList.contains("dark") ? "dark" : "default";
+}
+
+function getRenderedMermaidNodes(): HTMLElement[] {
+    return Array.from(
+        document.querySelectorAll<HTMLElement>(".mermaid[data-mermaid-source]"),
+    );
+}
+
+async function rerenderMermaidDiagrams() {
+    const nodes = getRenderedMermaidNodes();
+    if (nodes.length === 0) return;
+
+    const mermaid = await getMermaid();
+    mermaid.initialize({
+        startOnLoad: false,
+        securityLevel: "strict",
+        theme: getMermaidTheme(),
+    });
+
+    for (const node of nodes) {
+        const source = node.dataset.mermaidSource;
+        if (!source) continue;
+        node.removeAttribute("data-processed");
+        node.innerHTML = "";
+        node.textContent = source;
+    }
+
+    try {
+        await mermaid.run({ nodes });
+    } catch (e) {
+        console.error("[mermaid] re-render failed", e);
+    }
+}
+
 async function renderMermaidDiagrams() {
     const preNodes = findMermaidPreNodes();
     if (preNodes.length === 0) return;
@@ -73,7 +109,7 @@ async function renderMermaidDiagrams() {
     mermaid.initialize({
         startOnLoad: false,
         securityLevel: "strict",
-        theme: document.documentElement.classList.contains("dark") ? "dark" : "default",
+        theme: getMermaidTheme(),
     });
 
     const nodes: HTMLElement[] = [];
@@ -86,6 +122,7 @@ async function renderMermaidDiagrams() {
         const diagram = document.createElement("div");
         diagram.className = "mermaid";
         diagram.textContent = source;
+        diagram.dataset.mermaidSource = source;
 
         if (pre.closest(".frame")) {
             const code = pre.querySelector("code");
@@ -119,14 +156,16 @@ function setupMermaidHooks() {
     void renderMermaidDiagrams();
 
     const hook = () => void renderMermaidDiagrams();
+    const themeHook = () => void rerenderMermaidDiagrams();
     const swup = (window as any)?.swup;
     if (swup?.hooks) {
         swup.hooks.on("page:view", hook);
-        return;
+    } else {
+        document.addEventListener("swup:enable", () => {
+            (window as any).swup.hooks.on("page:view", hook);
+        });
     }
-    document.addEventListener("swup:enable", () => {
-        (window as any).swup.hooks.on("page:view", hook);
-    });
+    document.addEventListener("themechange", themeHook);
 }
 
 if (!(window as any)[INIT_KEY]) {

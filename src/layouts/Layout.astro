@@ -53,6 +53,26 @@ if (title) {
 const favicons: Favicon[] =
 	siteConfig.favicon.length > 0 ? siteConfig.favicon : defaultFavicons;
 
+function resolveFaviconHref(favicon?: Favicon): string {
+	if (!favicon) return "";
+	return favicon.src.startsWith("/") ? url(favicon.src) : favicon.src;
+}
+
+const lightTabFavicon =
+	favicons.find((favicon) => favicon.theme === "light" && favicon.sizes === "32x32") ??
+	favicons.find((favicon) => favicon.theme === "light") ??
+	favicons.find((favicon) => favicon.sizes === "32x32") ??
+	favicons[0];
+
+const darkTabFavicon =
+	favicons.find((favicon) => favicon.theme === "dark" && favicon.sizes === "32x32") ??
+	favicons.find((favicon) => favicon.theme === "dark") ??
+	lightTabFavicon;
+
+const staticFavicons = favicons.filter(
+	(favicon) => !(favicon.theme && favicon.sizes === "32x32"),
+);
+
 // const siteLang = siteConfig.lang.replace('_', '-')
 if (!lang) {
 	lang = `${siteConfig.lang}`;
@@ -119,7 +139,18 @@ const socialImageUrl =
 
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		{favicons.map(favicon => (
+		<link
+			id="dynamic-favicon"
+			rel="icon"
+			sizes="32x32"
+			href={resolveFaviconHref(lightTabFavicon)}
+		/>
+		<link
+			id="dynamic-shortcut-icon"
+			rel="shortcut icon"
+			href={resolveFaviconHref(lightTabFavicon)}
+		/>
+		{staticFavicons.map(favicon => (
 			<link rel="icon"
 				  href={favicon.src.startsWith('/') ? url(favicon.src) : favicon.src}
 				  sizes={favicon.sizes}
@@ -127,7 +158,27 @@ const socialImageUrl =
 			/>
 		))}
 		<!-- Set the theme before the page is rendered to avoid a flash -->
-		<script is:inline define:vars={{DEFAULT_THEME, LIGHT_MODE, DARK_MODE, AUTO_MODE, BANNER_HEIGHT_EXTEND, PAGE_WIDTH, configHue}}>
+		<script is:inline define:vars={{
+			DEFAULT_THEME,
+			LIGHT_MODE,
+			DARK_MODE,
+			AUTO_MODE,
+			BANNER_HEIGHT_EXTEND,
+			PAGE_WIDTH,
+			configHue,
+			lightTabFaviconHref: resolveFaviconHref(lightTabFavicon),
+			darkTabFaviconHref: resolveFaviconHref(darkTabFavicon),
+		}}>
+			const updateDynamicFavicon = (isDark) => {
+				const href = isDark ? darkTabFaviconHref : lightTabFaviconHref;
+				for (const id of ['dynamic-favicon', 'dynamic-shortcut-icon']) {
+					const link = document.getElementById(id);
+					if (link) {
+						link.setAttribute('href', href);
+					}
+				}
+			};
+
 			// Load the theme from local storage
 			const theme = localStorage.getItem('theme') || DEFAULT_THEME;
 			switch (theme) {
@@ -144,6 +195,11 @@ const socialImageUrl =
 						document.documentElement.classList.remove('dark');
 					}
 			}
+
+			updateDynamicFavicon(document.documentElement.classList.contains('dark'));
+			document.addEventListener('themechange', (event) => {
+				updateDynamicFavicon(Boolean(event.detail?.isDark));
+			});
 
 			// Load the hue from local storage
 			const hue = localStorage.getItem('hue') || configHue;

@@ -92,7 +92,7 @@
     }
 
     .mermaid-diagram {
-        @apply my-4 rounded-xl bg-[var(--codeblock-bg)] p-4 overflow-x-auto border border-[var(--line-divider)];
+        @apply my-4 rounded-xl bg-[var(--mermaid-bg)] p-4 overflow-x-auto border border-[var(--line-divider)];
     }
 
     .frame pre[data-mermaid-rendered="true"] > code {
