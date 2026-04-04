@@ -124,23 +124,19 @@ async function renderMermaidDiagrams() {
         diagram.textContent = source;
         diagram.dataset.mermaidSource = source;
 
-        if (pre.closest(".frame")) {
-            const code = pre.querySelector("code");
-            if (!code) continue;
-
-            code.textContent = "";
-            code.appendChild(diagram);
-            pre.dataset.mermaidRendered = "true";
-            pre.dataset.mermaidSource = source;
-            nodes.push(diagram);
-            continue;
-        }
-
         const wrapper = document.createElement("div");
         wrapper.className = "mermaid-diagram";
         wrapper.appendChild(diagram);
 
-        pre.replaceWith(wrapper);
+        const frame = pre.closest(".frame");
+        if (frame) {
+            frame.replaceWith(wrapper);
+        } else {
+            pre.replaceWith(wrapper);
+        }
+
+        pre.dataset.mermaidRendered = "true";
+        pre.dataset.mermaidSource = source;
         nodes.push(diagram);
     }
 
