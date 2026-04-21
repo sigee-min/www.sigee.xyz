@@ -22,6 +22,8 @@ draft: false
 
 그래서 결국 만들게 된 것이 `OhoCI`다.
 
+코드는 [sigee-min/ohoci](https://github.com/sigee-min/ohoci)에서 공개하고 있다.
+
 `OhoCI`는 한 문장으로 설명하면,
 `workflow_job` webhook을 받아서, 어떤 작업을 받아들일지 설명 가능하게 판단하고, 조건이 맞으면 `OCI`에 ephemeral runner를 띄우고, 작업이 끝나면 다시 정리하는 작은 control plane이다.
 
