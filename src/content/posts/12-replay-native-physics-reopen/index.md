@@ -5,7 +5,7 @@ description: 중간 지점에서 물리 장면을 다시 실행하려면 한 프
 tags: [physics, simulation]
 category: dev
 image: ./cover.png
-draft: false
+draft: true
 ---
 
 ## 재실행 문제

@@ -5,7 +5,7 @@ description: 재현 가능한 물리 시뮬레이션을 빠르게 만들려면 �
 tags: [physics, simulation]
 category: dev
 image: ./cover.png
-draft: false
+draft: true
 ---
 
 ## 프레임 예산과 실행 조건

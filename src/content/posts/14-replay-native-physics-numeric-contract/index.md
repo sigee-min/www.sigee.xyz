@@ -5,7 +5,7 @@ description: 부동소수점이 결정론을 흔드는 이유와, 고정소수�
 tags: [physics, simulation]
 category: dev
 image: ./cover.png
-draft: false
+draft: true
 ---
 
 ## 계산 조건

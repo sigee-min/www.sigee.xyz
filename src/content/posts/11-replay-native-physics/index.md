@@ -5,7 +5,7 @@ description: AI가 물리 시뮬레이션의 설계와 개선 루프에 들어�
 tags: [physics, simulation]
 category: dev
 image: ./cover.png
-draft: false
+draft: true
 ---
 
 ## 문제의식
