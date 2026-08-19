@@ -86,3 +86,4 @@ draft: false
 ## 참고 링크
 
 1. GitHub: [sigee-min/ashfox](https://github.com/sigee-min/ashfox)
+2. 커뮤니티: [디시인사이드](https://gall.dcinside.com/mgallery/board/view/?id=steve&no=387054&s_type=search_name&s_keyword=%EC%8A%A4%ED%8B%B0%EB%B6%80&page=1)
