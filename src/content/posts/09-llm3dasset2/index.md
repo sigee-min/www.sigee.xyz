@@ -5,7 +5,7 @@ description: Ashfox의 첫 결과물에 달린 피드백을 바탕으로 형태�
 image: ./images/griffin-poster.png
 tags: [ai, 3d, mcp, ashfox]
 category: dev
-draft: true
+draft: false
 ---
 
 [지난 글](/posts/07-llm3dasset/)에서 Ashfox로 만든 모델을 마인크래프트 커뮤니티에 올렸다가 혹평을 받았다고 적었다. 혼자 고치면서는 꽤 좋아졌다고 생각해서 자랑하고 싶은 마음도 있었는데, 실제로 게임을 하는 사람들에게는 어색한 부분이 많았다. 아래 두 장이 개선 전 결과물이다.
