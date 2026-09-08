@@ -1,5 +1,5 @@
 ---
-title: 에이전트를 이용해서 로우폴리 3D 에셋 하네스 만들기
+title: 3D 에셋 생성 하네스 만들기
 published: 2026-02-12
 description: 에이전트 기반 3D 에셋 생성 실험을 Ashfox 프로젝트로 전환하며 겪은 고민과 시도를 정리한 기록.
 image: /images/posts/07-llm3dasset/ashfox-animation.gif
