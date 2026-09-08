@@ -1,0 +1,28 @@
+.custom-md .audio-player {
+    margin: 1.75rem 0;
+    padding: 1.25rem;
+    border: 1px solid var(--line-divider);
+    border-radius: 0.75rem;
+    background: var(--license-block-bg);
+    color: var(--tw-prose-body);
+}
+
+.audio-player-caption {
+    margin-bottom: 1rem;
+}
+
+.audio-player-title {
+    color: var(--tw-prose-headings);
+    font-size: 1.125rem;
+}
+
+.audio-player audio {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    color-scheme: light;
+}
+
+.dark .audio-player audio {
+    color-scheme: dark;
+}

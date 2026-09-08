@@ -1,6 +1,7 @@
 ---
 import "@fontsource-variable/jetbrains-mono";
 import "@fontsource-variable/jetbrains-mono/wght-italic.css";
+import "../../styles/audio-player.css";
 
 interface Props {
 	class: string;
@@ -148,10 +149,22 @@ async function renderMermaidDiagrams() {
     }
 }
 
-function setupMermaidHooks() {
-    void renderMermaidDiagrams();
+const initializedAudioPlayers = new WeakSet<HTMLAudioElement>();
 
-    const hook = () => void renderMermaidDiagrams();
+function initializeAudioPlayers() {
+    for (const audio of document.querySelectorAll<HTMLAudioElement>(".audio-player audio")) {
+        if (initializedAudioPlayers.has(audio)) continue;
+        audio.volume = 0.5;
+        initializedAudioPlayers.add(audio);
+    }
+}
+
+function setupMarkdownHooks() {
+    const hook = () => {
+        initializeAudioPlayers();
+        void renderMermaidDiagrams();
+    };
+    hook();
     const themeHook = () => void rerenderMermaidDiagrams();
     const swup = (window as any)?.swup;
     if (swup?.hooks) {
@@ -191,6 +204,6 @@ if (!(window as any)[INIT_KEY]) {
         }
     });
 
-    setupMermaidHooks();
+    setupMarkdownHooks();
 }
 </script>
